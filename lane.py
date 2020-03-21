@@ -12,11 +12,13 @@ def region(img): #fills in region of street
     polygons = np.array([[(200,height), (1100, height), (550, 250)]])
     mask = np.zeros_like(img)
     cv2.fillPoly(mask, polygons, 255)
-    return mask
+    masked_image = cv2.bitwise_and(img, mask) #highlights only road lines by checking for similarities between triangle mask and original image with all lines
+    return masked_image
 
 img = cv2.imread("test_image.jpg")
 lane_img = np.copy(img)
 canny = canny(lane_img)
 
-cv2.imshow("result", region(canny))
+cropped_img = region(canny)
+cv2.imshow("result", cropped_img)
 cv2.waitKey(0)
