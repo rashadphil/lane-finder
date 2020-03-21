@@ -7,6 +7,15 @@ def canny(img):
     canny = cv2.Canny(blur, 50, 150) #outlines strongest gradients in image
     return canny
 
+def display_lines(img, lines): #displays detected lines
+    line_img = np.zeros_like(img)
+    if lines is not None:
+        for line in lines:
+            x1, y1, x2, y2 = line.reshape(4)
+            cv2.line(line_img, (x1, y1), (x2, y2), (255, 0, 0), 10)
+
+    return line_img
+
 def region(img): #fills in region of street
     height = img.shape[0]
     polygons = np.array([[(200,height), (1100, height), (550, 250)]])
@@ -20,5 +29,7 @@ lane_img = np.copy(img)
 canny = canny(lane_img)
 
 cropped_img = region(canny)
-cv2.imshow("result", cropped_img)
+lines = cv2.HoughLinesP(cropped_img, 2, np.pi/180, 100, np.array([]), minLineLength= 40, maxLineGap=5) #detects straight lines in image
+lines_img = display_lines(lane_img, lines)
+cv2.imshow("result", lines_img)
 cv2.waitKey(0)
