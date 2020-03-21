@@ -31,5 +31,7 @@ canny = canny(lane_img)
 cropped_img = region(canny)
 lines = cv2.HoughLinesP(cropped_img, 2, np.pi/180, 100, np.array([]), minLineLength= 40, maxLineGap=5) #detects straight lines in image
 lines_img = display_lines(lane_img, lines)
-cv2.imshow("result", lines_img)
+
+combo_img = cv2.addWeighted(lane_img, 0.8, lines_img, 1, 1) #combines line img and original img
+cv2.imshow("result", combo_img)
 cv2.waitKey(0)
